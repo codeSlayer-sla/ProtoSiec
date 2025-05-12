@@ -331,101 +331,49 @@ function generateGenericData(category: string, count: number, includeLocation = 
   return sampleData
 }
 
-// Funciones de generación (nuevas)
-export async function generateJSON(): Promise<Blob> {
-  const data = generateCrimeStatistics(10, true)
-  const jsonString = JSON.stringify(data, null, 2)
-  return new Blob([jsonString], { type: "application/json" })
+// Función para traducir encabezados al español
+const translateHeaders = (headers: string[]): string[] => {
+  const translations: Record<string, string> = {
+    id: "ID",
+    title: "Título",
+    description: "Descripción",
+    date: "Fecha",
+    source: "Fuente",
+    category: "Categoría",
+    tags: "Etiquetas",
+    data: "Datos",
+    province: "Provincia",
+    year: "Año",
+    month: "Mes",
+    crime_type: "Tipo de Delito",
+    crime_name: "Nombre del Delito",
+    count: "Cantidad",
+    rate: "Tasa",
+    trend: "Tendencia",
+    severity: "Severidad",
+    location: "Ubicación",
+    latitude: "Latitud",
+    longitude: "Longitud",
+    capital: "Capital",
+    population: "Población",
+    population_density: "Densidad Poblacional",
+    male_percentage: "Porcentaje Masculino",
+    female_percentage: "Porcentaje Femenino",
+    urban_percentage: "Porcentaje Urbano",
+    rural_percentage: "Porcentaje Rural",
+    growth_rate: "Tasa de Crecimiento",
+    case_number: "Número de Caso",
+    district: "Distrito",
+    status: "Estado",
+    downloads: "Descargas",
+    updated_at: "Actualizado",
+    record_count: "Cantidad de Registros"
+  }
+
+  return headers.map(header => translations[header] || header)
 }
 
-export async function generateCSV(): Promise<Blob> {
-  const data = generateCrimeStatistics(10, true)
-
-  // Obtener encabezados
-  const headers = Object.keys(data[0]).join(",")
-
-  // Crear filas
-  const rows = data
-    .map((item) => {
-      return Object.values(item)
-        .map((value) => {
-          // Manejar objetos anidados (como location)
-          if (typeof value === "object" && value !== null) {
-            return `"${JSON.stringify(value).replace(/"/g, '""')}"`
-          }
-          // Escapar comillas en strings
-          if (typeof value === "string") {
-            return `"${value.replace(/"/g, '""')}"`
-          }
-          return value
-        })
-        .join(",")
-    })
-    .join("\n")
-
-  const csvString = `${headers}\n${rows}`
-  return new Blob([csvString], { type: "text/csv" })
-}
-
-export async function generateXML(): Promise<Blob> {
-  const data = generateCrimeStatistics(5, true)
-  let xmlString = '<?xml version="1.0" encoding="UTF-8"?>\n<data>\n'
-
-  data.forEach((item) => {
-    xmlString += "  <item>\n"
-    Object.entries(item).forEach(([key, value]) => {
-      // Manejar objetos anidados (como location)
-      if (typeof value === "object" && value !== null) {
-        xmlString += `    <${key}>\n`
-        Object.entries(value).forEach(([subKey, subValue]) => {
-          xmlString += `      <${subKey}>${subValue}</${subKey}>\n`
-        })
-        xmlString += `    </${key}>\n`
-      } else {
-        xmlString += `    <${key}>${value}</${key}>\n`
-      }
-    })
-    xmlString += "  </item>\n"
-  })
-
-  xmlString += "</data>"
-  return new Blob([xmlString], { type: "application/xml" })
-}
-
-export async function generateExcel(): Promise<Blob> {
-  const data = generateCrimeStatistics(15, true)
-
-  // Crear un libro de trabajo
-  const wb = XLSX.utils.book_new()
-
-  // Preparar datos para Excel (aplanar objetos anidados)
-  const flatData = data.map((item) => {
-    const flatItem: Record<string, any> = { ...item }
-
-    // Aplanar el objeto location si existe
-    if (item.location) {
-      flatItem.latitude = item.location.lat
-      flatItem.longitude = item.location.lng
-      delete flatItem.location
-    }
-
-    return flatItem
-  })
-
-  // Convertir datos a formato de hoja de cálculo
-  const ws = XLSX.utils.json_to_sheet(flatData)
-
-  // Añadir la hoja al libro
-  XLSX.utils.book_append_sheet(wb, ws, "Estadísticas Criminales")
-
-  // Generar archivo Excel
-  const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" })
-  return new Blob([new Uint8Array(excelBuffer)], {
-    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  })
-}
-
-// Funciones de descarga (antiguas, para mantener compatibilidad)
+// Funciones de descarga
 export async function downloadJSON(datasetName: string, count = 20): Promise<void> {
   try {
     console.log("Iniciando descarga en formato JSON...")
@@ -462,9 +410,10 @@ export async function downloadCSV(datasetName: string, count = 20): Promise<void
     }
 
     const headers = Object.keys(data[0])
+    const translatedHeaders = translateHeaders(headers)
 
     // Crear contenido CSV
-    let csvContent = headers.join(",") + "\n"
+    let csvContent = translatedHeaders.join(",") + "\n"
 
     // Añadir filas
     data.forEach((row) => {
@@ -530,6 +479,18 @@ export async function downloadExcel(datasetName: string, count = 20): Promise<vo
     // Convertir datos a formato de hoja de cálculo
     const ws = XLSX.utils.json_to_sheet(flatData)
 
+    // Traducir encabezados
+    const headers = Object.keys(flatData[0])
+    const translatedHeaders = translateHeaders(headers)
+    const range = XLSX.utils.decode_range(ws["!ref"] || "A1")
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      const header = XLSX.utils.encode_col(C)
+      const translatedHeader = translatedHeaders[C]
+      if (ws[header + "1"]) {
+        ws[header + "1"].v = translatedHeader
+      }
+    }
+
     // Añadir la hoja al libro
     XLSX.utils.book_append_sheet(wb, ws, "Datos")
 
@@ -594,11 +555,12 @@ export async function downloadPDF(datasetName: string, count = 20): Promise<void
 
     // Preparar datos para la tabla
     const headers = Object.keys(flatData[0])
+    const translatedHeaders = translateHeaders(headers)
     const rows = flatData.map((row) => headers.map((header) => row[header]))
 
     // Añadir tabla
     autoTable(doc, {
-      head: [headers],
+      head: [translatedHeaders],
       body: rows,
       startY: 60,
       margin: { top: 60 },
@@ -697,7 +659,7 @@ export const shareData = async (title: string, format: string) => {
 }
 
 // Función para descargar un conjunto de datos en el formato seleccionado
-export const downloadDataset = async (datasetName: string, format: string, count = 50) => {
+export async function downloadDataset(datasetName: string, format: string, count = 20): Promise<void> {
   switch (format.toLowerCase()) {
     case "json":
       return await downloadJSON(datasetName, count)
@@ -710,7 +672,6 @@ export const downloadDataset = async (datasetName: string, format: string, count
     case "pdf":
       return await downloadPDF(datasetName, count)
     default:
-      console.error(`Formato no soportado: ${format}`)
       throw new Error(`Formato no soportado: ${format}`)
   }
 }
