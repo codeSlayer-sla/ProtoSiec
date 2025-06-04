@@ -3,10 +3,12 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { ChevronRight, Database, FileDown, Users } from "lucide-react"
+import { ChevronRight, Database, Newspaper, FileDown, Users } from "lucide-react"
 import SearchBar from "@/components/search-bar"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
+import HeroAnimation from "@/components/hero-animation"
+import MiniCarousel from "@/components/mini-carousel"
 
 export default function EnhancedHero() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -20,6 +22,25 @@ export default function EnhancedHero() {
       description: `Buscando: "${query}"`,
     })
     router.push(`/datasets?search=${encodeURIComponent(query)}`)
+  }
+
+  const handleRequestData = () => {
+    // Open the Excel file in the same window
+    window.location.href = '/excel/FORMULARIO-DE-SOLICITUD-DE-ESTADISTICA-SIEC.xlsx'
+    
+    // Show instructions toast
+    toast({
+      title: "Pasos para solicitar estadísticas",
+      description: (
+        <div className="mt-2 space-y-2">
+          <p>1. Descargue y complete el formulario Excel</p>
+          <p>2. Envíe el formulario completado a: <a href="mailto:solicitud@siec.gob.pa" className="text-blue-600 hover:underline">solicitud@siec.gob.pa</a></p>
+          <p>3. Espere la confirmación de recepción</p>
+          <p>4. Recibirá los datos solicitados en un plazo máximo de 10 días hábiles</p>
+        </div>
+      ),
+      duration: 10000, // Show for 10 seconds
+    })
   }
 
   const containerVariants = {
@@ -60,6 +81,8 @@ export default function EnhancedHero() {
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-white py-20 dark:from-slate-950 dark:to-slate-900">
+      {/* Fondo animado de partículas */}
+      <HeroAnimation />
       {/* Decorative elements */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute -left-4 -top-24 h-[500px] w-[500px] rounded-full bg-blue-100/40 blur-3xl dark:bg-blue-900/10"></div>
@@ -77,18 +100,18 @@ export default function EnhancedHero() {
             variants={itemVariants}
             className="mb-4 inline-block rounded-full bg-blue-100 px-4 py-1.5 text-sm font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
           >
-            Portal Nacional de Datos Abiertos
+            Ministerio de Seguridad Pública
+
           </motion.div>
           <motion.h1
             variants={itemVariants}
             className="mb-6 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl md:text-6xl dark:text-white"
           >
-            Descubre los datos de{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Panamá</span>
+            Sistema Nacional Integrado de {" "}
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Estadísticas Criminales</span>
           </motion.h1>
           <motion.p variants={itemVariants} className="mb-10 text-xl text-slate-600 dark:text-slate-300">
-            Accede a información pública, transparente y actualizada para impulsar la innovación y el desarrollo del
-            país.
+          Con el fin de conocer la situación objetiva de la delincuencia en la República de Panamá, en el año 2007 se crea la Dirección del Sistema Nacional Integrado de Estadística Criminal DNSIEC, que sustituye en sus funciones a la CONADEC.
           </motion.p>
 
           <motion.div variants={itemVariants} className="mb-12">
@@ -105,39 +128,20 @@ export default function EnhancedHero() {
               Explorar datos
               <ChevronRight className="h-4 w-4" />
             </Button>
-            <Button size="lg" variant="outline" className="gap-2 rounded-full">
-              <FileDown className="h-5 w-5" />
-              Descargar API
+            <Button 
+              size="lg" 
+              className="gap-2 rounded-full"
+              onClick={handleRequestData}
+            >
+              <Newspaper className="h-5 w-5" />
+              Solicitar datos
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </motion.div>
+          <MiniCarousel />
         </motion.div>
 
-        <motion.div
-          variants={statsVariants}
-          initial="hidden"
-          animate="visible"
-          className="mx-auto grid max-w-4xl grid-cols-1 gap-8 rounded-2xl border bg-white/80 p-8 backdrop-blur-sm sm:grid-cols-3 dark:bg-slate-800/80 dark:border-slate-700"
-        >
-          <div className="text-center">
-            <div className="flex items-center justify-center">
-              <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">1,240+</span>
-            </div>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">Conjuntos de datos</p>
-          </div>
-          <div className="text-center">
-            <div className="flex items-center justify-center">
-              <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">32</span>
-            </div>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">Instituciones</p>
-          </div>
-          <div className="text-center">
-            <div className="flex items-center justify-center">
-              <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">15K+</span>
-              <Users className="ml-1 h-5 w-5 text-blue-600 dark:text-blue-400" />
-            </div>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">Usuarios activos</p>
-          </div>
-        </motion.div>
+        
       </div>
     </section>
   )

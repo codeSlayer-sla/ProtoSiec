@@ -25,24 +25,9 @@ export default function Home() {
           <EnhancedHero />
         </section>
 
-        <section
-          id="features"
-          className="py-16 md:py-24 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-blue-950/20"
-        >
-          <div className="container">
-            <FeatureHighlights />
-          </div>
-        </section>
-
         <section id="about" className="py-16 md:py-24">
           <div className="container">
-            <h2 className="mb-8 text-center text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Sobre el SIEC
-            </h2>
-            <p className="text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
-              Conoce más sobre el Sistema Integrado de Estadísticas Criminales y nuestro compromiso con la transparencia
-              y acceso a datos.
-            </p>
+            
             <AboutSection />
           </div>
         </section>
