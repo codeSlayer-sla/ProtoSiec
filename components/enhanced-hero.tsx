@@ -114,13 +114,7 @@ export default function EnhancedHero() {
           Con el fin de conocer la situación objetiva de la delincuencia en la República de Panamá, en el año 2007 se crea la Dirección del Sistema Nacional Integrado de Estadística Criminal DNSIEC, que sustituye en sus funciones a la CONADEC.
           </motion.p>
 
-          <motion.div variants={itemVariants} className="mb-12">
-            <SearchBar
-              placeholder="Busca conjuntos de datos, categorías o temas..."
-              className="mx-auto max-w-2xl"
-              onSearch={handleSearch}
-            />
-          </motion.div>
+          
 
           <motion.div variants={itemVariants} className="mb-16 flex flex-wrap justify-center gap-4">
             <Button size="lg" className="gap-2 rounded-full">

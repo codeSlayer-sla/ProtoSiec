@@ -8,138 +8,88 @@ import { ArrowRight, Users, BookOpen, Globe, Award, X, Info, Handshake, Settings
 import Image from "next/image"
 import { useState } from "react"
 
-export default function AboutSection() {
+export default function AboutDetail() {
   const [modalOpen, setModalOpen] = useState<null | "servicios" | "colaboradores" | "subunidad" | "equipo" | "organigrama">(null)
 
   return (
     <section id="about" className="py-20">
       <div className="container px-4 md:px-6">
-        <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_500px]">
-          <Tabs defaultValue="mission" className="h-full w-full">
-            <div className="flex flex-col items-start space-y-4">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Sobre el SIEC</h2>
-              <p className="text-muted-foreground md:text-xl">
-                Conoce más sobre nuestra misión, visión.
-              </p>
-              <TabsList className="grid w-full grid-cols-3 gap-4">
-                <TabsTrigger value="mission">Misión</TabsTrigger>
-                <TabsTrigger value="vision">Visión</TabsTrigger>
-                <TabsTrigger value="team">Organigrama</TabsTrigger>
-              </TabsList>
-            </div>
-            <TabsContent value="mission" className="mt-0">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Misión del SIEC</CardTitle>
-                  {/* Cambiado de CardDescription a div para evitar el elemento p anidado */}
-                  <div className="text-base text-muted-foreground">Sistema Integrado de Estadísticas Criminales</div>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <p className="leading-relaxed">
-                      Desarrollar programas, proyectos, y actividades destinados al procesamiento de las estadísticas
-                      criminales con fines de investigación, observación, análisis situacional, y formulación de
-                      políticas públicas, para la toma de decisiones a nivel estratégico, en la lucha por la disminución
-                      de los índices de criminalidad en nuestra sociedad
-                    </p>
-                    <div className="flex flex-col space-y-2">
-                      <div className="flex items-center gap-2">
-                        <BookOpen className="h-5 w-5 text-primary" />
-                        <span className="font-medium">Educación y capacitación en el uso de datos</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Globe className="h-5 w-5 text-primary" />
-                        <span className="font-medium">Accesibilidad universal a la información</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Award className="h-5 w-5 text-primary" />
-                        <span className="font-medium">Excelencia en la calidad de los datos</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="vision" className="mt-0">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Visión del SIEC</CardTitle>
-                  {/* Cambiado de CardDescription a div para evitar el elemento p anidado */}
-                  <div className="text-base text-muted-foreground">Sistema Integrado de Estadísticas Criminales</div>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <p className="leading-relaxed">
-                      Contribuir a la generación, desarrollo y aplicación del conocimiento científico y tecnológico, que
-                      permita reducir los índices delictivos y mejorar la convivencia ciudadana, para la prevención y
-                      control de la criminalidad, con orientación hacia la excelencia en el ámbito nacional e
-                      internacional
-                    </p>
-                    <div className="mt-4 rounded-lg bg-muted p-4">
-                      <h4 className="mb-2 font-semibold">Objetivos a largo plazo</h4>
-                      <ul className="space-y-1 text-sm">
-                        <li className="flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>
-                          <span>100% de las instituciones públicas compartiendo datos abiertos</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>
-                          <span>Ecosistema de innovación basado en datos abiertos</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>
-                          <span>Formación ciudadana en análisis y uso de datos</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="team" className="mt-0">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Organigrama</CardTitle>
-                  <div className="text-base text-muted-foreground">
-                    Profesionales comprometidos con la transparencia y la innovación
-                  </div>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center justify-center">
-                    <button
-                      onClick={() => setModalOpen("organigrama")}
-                      className="focus:outline-none group"
-                      title="Ver organigrama en grande"
-                    >
-                      <Image
-                        src="/equipo.png"
-                        alt="Organigrama SIEC"
-                        width={400}
-                        height={400}
-                        className="rounded-lg object-contain shadow-lg group-hover:scale-105 transition-transform cursor-pointer"
-                      />
-                    </button>
-                    <span className="mt-2 text-sm text-muted-foreground">Haz clic para ver el organigrama en grande</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+        <div className="grid gap-6 lg:grid-cols-[400px_1fr] lg:gap-12 xl:grid-cols-[500px_1fr]">
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
             className="relative hidden aspect-square overflow-hidden rounded-xl lg:block cursor-pointer"
           >
-            <Image src="/sieclogo.png" alt="Equipo de trabajo" fill className="object-cover" />
+            <Image src="/edificio.jpg" alt="Equipo de trabajo" fill className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-            <div className="absolute bottom-0 left-0 p-6 text-white">
-              <h3 className="text-2xl font-bold">Comprometidos con Panamá</h3>
-              <p className="mt-2 max-w-md text-white/90">
-              </p>
-            </div>
+            
           </motion.div>
+          <Tabs defaultValue="servicios" className="h-full w-full">
+            <div className="flex flex-col items-start space-y-4">
+              <TabsList className="grid w-full grid-cols-3 gap-4">
+                <TabsTrigger value="servicios">Servicios</TabsTrigger>
+                <TabsTrigger value="colaboradores">Colaboradores</TabsTrigger>
+                <TabsTrigger value="subunidad">Sub Unidad Técnica</TabsTrigger>
+              </TabsList>
+            </div>
+            
+            <TabsContent value="servicios" className="mt-0">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-blue-700">
+                    <Info className="h-6 w-6" /> Nuestros Servicios
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <ul className="list-disc pl-6 space-y-3 text-base text-slate-700 dark:text-slate-200">
+                    <li><b>Coordinación:</b> con las instituciones que forman parte del Sistema Integrado de Estadísticas Criminales, el diseño, las normas de análisis, y la estandarización de todos los datos e información estadísticos necesarios para la toma de decisiones en el proceso de combate de la criminalidad.</li>
+                    <li><b>Informes:</b> Elaboración y publicación de informes estadísticos, dándole seguimiento a las condiciones de la delincuencia por medio de múltiples variables de las ciencias sociales.</li>
+                    <li><b>Capacitación y asesoramiento:</b> Realizamos actividades de capacitación y asesoramiento como parte de nuestras funciones, en temas estadísticos, criminológicos, sociológicos, entre otros, tanto a los estamentos e instituciones gubernamentales, como también cualquier otra entidad que maneje y produzca información criminal.</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="colaboradores" className="mt-0">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-purple-700">
+                    <Handshake className="h-6 w-6" /> Colaboradores Estratégicos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="text-base text-slate-700 dark:text-slate-200 space-y-4">
+                    <p>Colaboramos con instituciones nacionales e internacionales para fortalecer la calidad y el alcance de los datos estadísticos criminales.</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 items-center justify-items-center py-2">
+                      {[...Array(10)].map((_, idx) => (
+                        <img
+                          key={idx}
+                          src={`/colab${idx + 1}.png`}
+                          alt={`Colaborador ${idx + 1}`}
+                          className="h-20 w-auto object-contain rounded shadow bg-white p-2"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="subunidad" className="mt-0">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-green-700">
+                    <Settings className="h-6 w-6" /> Sub Unidad Técnica
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <SubUnidadTecnicaStepper />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
         {/* Modal para imagen y popups */}
         {modalOpen && (
@@ -295,14 +245,16 @@ function SubUnidadTecnicaStepper() {
       title: "Orígenes",
       content: (
         <div>
-          <p>Panamá se incorporó al Sistema Regional de Indicadores Estandarizados de Convivencia y Seguridad Ciudadana (SES) en noviembre del 2012. La coordinación de la SUT en Panamá es ejercida por el Ministerio de Seguridad, a través del Sistema Integrado de Estadísticas Criminales (SIEC). Por lo que es el garante de coordinar el flujo de información procedente de las instituciones miembros del Sistema Regional de Indicadores Estandarizados de Seguridad y Convivencia Ciudadana de América Latina, al igual que es el responsable de organizar la dinámica de coordinación interinstitucional por medio del sistema de mesas temáticas de acuerdo a la prioridad y requerimiento de la información sobre criminalidad, seguridad y convivencia ciudadana.</p>
+          <p className="text-base text-slate-700 dark:text-slate-200">
+            Panamá se incorporó al Sistema Regional de Indicadores Estandarizados de Convivencia y Seguridad Ciudadana (SES) en noviembre del 2012. La coordinación de la SUT en Panamá es ejercida por el Ministerio de Seguridad, a través del Sistema Integrado de Estadísticas Criminales (SIEC). Por lo que es el garante de coordinar el flujo de información procedente de las instituciones miembros del Sistema Regional de Indicadores Estandarizados de Seguridad y Convivencia Ciudadana de América Latina, al igual que es el responsable de organizar la dinámica de coordinación interinstitucional por medio del sistema de mesas temáticas de acuerdo a la prioridad y requerimiento de la información sobre criminalidad, seguridad y convivencia ciudadana.
+          </p>
         </div>
       ),
     },
     {
       title: "Funciones",
       content: (
-        <ul className="list-disc pl-6 space-y-2">
+        <ul className="list-disc pl-6 space-y-2 text-base text-slate-700 dark:text-slate-200">
           <li>Concertar y establecer, los contenidos y la dinámica de información remitida al Sistema Nacional Integrado de Estadísticas Criminales (SIEC), de acuerdo a los requerimientos de la evolución de la situación de criminalidad, violencia y convivencia ciudadana en el país; en concordancia con los compromisos internacionales (Acuerdos, Convenios y Tratados, referentes a la materia antes detallada).</li>
           <li>Avalar la calidad de los datos mediante el mecanismo de validación de la información generada entre las Instituciones como parte de la estrategia de país.</li>
           <li>Desarrollar los planes de cooperación interinstitucional para el fortalecimiento de capacidades en función del diagnóstico de los sistemas de cada Institución.</li>
@@ -313,7 +265,7 @@ function SubUnidadTecnicaStepper() {
     {
       title: "Entidades Miembro",
       content: (
-        <ul className="list-disc pl-6 columns-2 gap-8 text-sm md:text-base">
+        <ul className="list-disc pl-6 columns-2 gap-8 text-sm md:text-base text-slate-700 dark:text-slate-200">
           <li>Policía Nacional – Dirección Nacional de Operaciones</li>
           <li>Dirección de Investigación Judicial</li>
           <li>Servicio Nacional de Fronteras</li>
@@ -347,46 +299,45 @@ function SubUnidadTecnicaStepper() {
     {
       title: "Documentos de Interés",
       content: (
-        <div>
-          <ul className="space-y-3">
-            <li>
-              <a
-                href="/pdf/tecnica1.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-700 hover:underline hover:text-blue-900 font-medium"
-              >
-                <span>📄</span>
-                Informe Analítico de la Sub Unidad Técnica (2014)
-              </a>
-            </li>
-            <li>
-              <a
-                href="/pdf/tecnica2.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-700 hover:underline hover:text-blue-900 font-medium"
-              >
-                <span>📄</span>
-                Resolución No. 458-R-457 que crea la Sub Unidad Técnica del Sistema de Indicadores de Seguridad y Convivencia Ciudadana
-              </a>
-            </li>
-            <li>
-              <a
-                href="/pdf/tecnica3.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-700 hover:underline hover:text-blue-900 font-medium"
-              >
-                <span>📄</span>
-                Acuerdo Interinstitucional Municipio de Chorrera – SIEC
-              </a>
-            </li>
-          </ul>
-        </div>
+        <ul className="space-y-3">
+          <li>
+            <a
+              href="/pdf/tecnica1.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-blue-700 hover:underline hover:text-blue-900 font-medium"
+            >
+              <span>📄</span>
+              Informe Analítico de la Sub Unidad Técnica (2014)
+            </a>
+          </li>
+          <li>
+            <a
+              href="/pdf/tecnica2.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-blue-700 hover:underline hover:text-blue-900 font-medium"
+            >
+              <span>📄</span>
+              Resolución No. 458-R-457 que crea la Sub Unidad Técnica del Sistema de Indicadores de Seguridad y Convivencia Ciudadana
+            </a>
+          </li>
+          <li>
+            <a
+              href="/pdf/tecnica3.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-blue-700 hover:underline hover:text-blue-900 font-medium"
+            >
+              <span>📄</span>
+              Acuerdo Interinstitucional Municipio de Chorrera – SIEC
+            </a>
+          </li>
+        </ul>
       ),
     },
   ]
+
   return (
     <div className="flex flex-col items-center w-full">
       <h3 className="text-2xl font-bold mb-4 text-green-700">{steps[step].title}</h3>

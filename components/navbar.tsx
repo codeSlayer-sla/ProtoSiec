@@ -5,9 +5,10 @@ import Image from "next/image"
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Menu, X, Database, Home, Info, BarChart, Mail, Download, Newspaper, Book} from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
+import { Menu, X, Database, Home, Info, BarChart, Mail, Download, Newspaper, Book, FileText, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
 import { useTheme } from "next-themes"
@@ -23,7 +24,9 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("")
   const [isScrolled, setIsScrolled] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
   const pathname = usePathname()
+  const router = useRouter()
   const { theme, setTheme } = useTheme()
 
   const navItems: NavItem[] = [
@@ -32,18 +35,21 @@ export function Navbar() {
       href: pathname === "/" ? "#hero" : "/",
       icon: <Home className="h-4 w-4" />,
     },
-    
     {
       label: "Datos",
-      href: pathname === "/" ? "#datasets" : "/datasets",
+      href: "/datos",
       icon: <Database className="h-4 w-4" />,
     },
     {
+      label: "Publicaciones",
+      href: "/publicaciones",
+      icon: <FileText className="h-4 w-4" />,
+    },
+    {
       label: "Biblioteca SIEC",
-      href: "#visualizations",
+      href: "/biblioteca",
       icon: <Book className="h-4 w-4" />,
     },
-    
     {
       label: "Contacto",
       href: "#contacto",
@@ -100,15 +106,24 @@ export function Navbar() {
     }
   }
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      // Aquí puedes implementar la lógica de búsqueda
+      // Por ahora, solo redirigimos a la página de búsqueda con el query
+      router.push(`/busqueda?q=${encodeURIComponent(searchQuery.trim())}`)
+    }
+  }
+
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300 bg-transparent dark:bg-white-200 backdrop-blur-none",
-        isScrolled ? " backdrop-blur-md shadow-md dark:bg-gray-900/90" : "bg-transparent backdrop-blur-none shadow-none",
+        "sticky top-0 z-50 w-full transition-all duration-300 bg-transparent backdrop-blur-none",
+        isScrolled 
+          ? "backdrop-blur-md shadow-md bg-white/80 dark:bg-black/20" 
+          : "bg-transparent backdrop-blur-none shadow-none"
       )}
     >
-      
-      
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <motion.div
@@ -127,6 +142,33 @@ export function Navbar() {
           </motion.div>
           
 
+          {/* Barra de búsqueda */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+            className="hidden md:block flex-1 max-w-xl mx-4"
+          >
+            <form onSubmit={handleSearch} className="relative">
+              <Input
+                type="search"
+                placeholder="Busca aqui"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-200/50 dark:border-gray-700/50 bg-white/30 dark:bg-black/20 backdrop-blur-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
+              <Button
+                type="submit"
+                variant="ghost"
+                size="sm"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 px-3 hover:bg-primary/10 dark:hover:bg-primary/20"
+              >
+                Buscar
+              </Button>
+            </form>
+          </motion.div>
+
           {/* Navegación de escritorio */}
           <nav className="hidden md:flex items-center space-x-1">
             {navItems.map((item, index) => (
@@ -140,10 +182,10 @@ export function Navbar() {
                   href={item.href}
                   onClick={(e) => scrollToSection(e, item.href)}
                   className={cn(
-                    "px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center space-x-1 hover:bg-gray-100 hover:shadow-md hover:scale-105 hover:z-10 hover:text-blue-700 dark:hover:bg-gray-800/60 dark:hover:text-blue-300",
+                    "px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center space-x-1 hover:bg-white/20 hover:shadow-md hover:scale-105 hover:z-10 hover:text-blue-700 dark:hover:bg-white/10 dark:hover:text-blue-300",
                     activeSection === item.href.replace("#", "") || (activeSection === "" && item.href === "#hero")
-                      ? "bg-blue-100 text-blue-700 shadow-sm dark:bg-blue-900/30 dark:text-blue-300"
-                      : "text-gray-700 dark:text-gray-300",
+                      ? "bg-white/30 text-blue-700 shadow-sm dark:bg-white/10 dark:text-blue-300"
+                      : "text-gray-700 dark:text-gray-300"
                   )}
                 >
                   {item.icon}
@@ -188,9 +230,31 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-800 shadow-lg"
+            className="md:hidden bg-white/80 dark:bg-black/20 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50 shadow-lg"
           >
             <div className="container mx-auto px-4 py-2">
+              {/* Barra de búsqueda móvil */}
+              <div className="mb-4">
+                <form onSubmit={handleSearch} className="relative">
+                  <Input
+                    type="search"
+                    placeholder="Busca aqui"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-200/50 dark:border-gray-700/50 bg-white/30 dark:bg-black/20 backdrop-blur-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 px-3 hover:bg-primary/10 dark:hover:bg-primary/20"
+                  >
+                    Buscar
+                  </Button>
+                </form>
+              </div>
+
               <nav className="flex flex-col space-y-1">
                 {navItems.map((item, index) => (
                   <motion.div
@@ -205,8 +269,8 @@ export function Navbar() {
                       className={cn(
                         "px-3 py-3 rounded-md text-sm font-medium transition-colors flex items-center space-x-3",
                         activeSection === item.href.replace("#", "") || (activeSection === "" && item.href === "#hero")
-                          ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
-                          : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",
+                          ? "bg-white/30 text-blue-700 dark:bg-white/10 dark:text-blue-300"
+                          : "text-gray-700 hover:bg-white/20 dark:text-gray-300 dark:hover:bg-white/10"
                       )}
                     >
                       {item.icon}
